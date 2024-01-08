@@ -1,6 +1,7 @@
 package com.example.quote.service.entity;
 
 import lombok.Data;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
@@ -14,8 +15,16 @@ public class RestApiEntity {
     RestTemplate restTemplate;
 
 
-    public <T> ResponseEntity<T> getEntity(String url, RequestEntity<T> requestEntity, Class<T> tClass){
-        return restTemplate.exchange(url, HttpMethod.GET, requestEntity, tClass);
+    public <T> T getObject(String url, Class<T> tClass){
+        return restTemplate.getForObject(url, tClass);
+    }
+
+    public <T> ResponseEntity<T> getEntity(String url, HttpEntity<?> httpEntity, Class<T> tClass){
+        return restTemplate.exchange(url, HttpMethod.GET, httpEntity, tClass);
+    }
+
+    public <T> ResponseEntity getEntity(String url, HttpEntity<?> httpEntity, ParameterizedTypeReference tClass){
+        return restTemplate.exchange(url, HttpMethod.GET, httpEntity, tClass);
     }
 
 
