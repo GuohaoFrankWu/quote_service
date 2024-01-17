@@ -1,6 +1,8 @@
 package com.example.quote.service.entity;
 
+import com.example.quote.service.config.QuoteProperties;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -12,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestApiEntity {
 
 
-    RestTemplate restTemplate;
+    RestTemplate restTemplate = new RestTemplate();
 
 
     public <T> T getObject(String url, Class<T> tClass){

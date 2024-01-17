@@ -1,7 +1,8 @@
-package com.example.quote.service.Controllers;
+package com.example.quote.service.controllers;
 
 
 import com.example.quote.service.services.QuoteRetrieveService;
+import com.example.quote.service.services.dto.QuoteResponseEntity;
 import com.example.quote.service.services.dto.Qutd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,13 @@ public class QuoteController {
 
     @GetMapping(path = "/random/quote")
     public @ResponseBody Qutd getRandomQuote(){
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("content-type", "application/json; charset=utf-8");
         Qutd qutd = quoteRetrieveService.getRandomQuote();
-
         return qutd;
+    }
+
+    @GetMapping(path = "achieve/quotes/from/database")
+    public @ResponseBody QuoteResponseEntity getAllAchieveQuotes(){
+        return new QuoteResponseEntity();
     }
 
 }
