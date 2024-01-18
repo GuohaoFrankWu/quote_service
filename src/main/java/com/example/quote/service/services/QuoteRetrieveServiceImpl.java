@@ -1,15 +1,17 @@
 package com.example.quote.service.services;
 
-import com.example.quote.service.Exceptions.ExceptionResponse;
+import com.example.quote.service.config.QuoteProperties;
+import com.example.quote.service.entity.RestApiEntity;
+import com.example.quote.service.exceptions.ExceptionResponse;
 import com.example.quote.service.services.dto.Qutd;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 
 @Service
@@ -27,28 +29,21 @@ public class QuoteRetrieveServiceImpl implements QuoteRetrieveService {
         this.quoteRandomUrl = quoteRandomUrl;
     }
 
+    @Autowired
+    private RestApiEntity restApiEntity = new QuoteProperties().getRestApiEntity();
+
+
     @Override
     public Qutd getRandomQuote() {
 
         Qutd qutd = null;
         try {
             log.info("the url is " + quoteRandomUrl);
-
-
-            client = WebClient.create(quoteRandomUrl);
-
-            Mono<Qutd> result = client.get().accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Qutd.class);
-            qutd = result.toFuture().get();
-
-
-
+            qutd = restApiEntity.getObject(quoteRandomUrl, Qutd.class);
             log.info("the json response is " + qutd);
-
-
-        } catch (Exception e) {
+        } catch (RestClientException e) {
             log.error("there is a error in the getRandomQuote() " + e);
-            throw new ExceptionResponse();
-
+            throw new ExceptionResponse("there is a error in the getRandomQuote() ", e);
         }
 
 
